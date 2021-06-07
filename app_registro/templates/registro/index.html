@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}
+    INDEX
+{% endblock %}
+
+{% block container %}
+    <a href="{% url 'participantes' %}">Ir a participantes</a><br>
+    <a href="{% url 'conferencistas' %}">Ir a conferencistas</a>
+{% endblock %}
