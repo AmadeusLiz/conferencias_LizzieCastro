@@ -9,29 +9,37 @@
     <div class="row">
         <!-- FORMULARIO -->
         <div class="col-3">
+        {% if p  %}
+            <form action="{% url 'editar_participante' p.id %}"></form>
+        {% else  %}
             <form action="{% url 'participantes' %}" method="POST">
+        {% endif  %}
                 {% csrf_token %}
                 <div class="mb-3">
                     <label for="nombre">Nombre</label>
-                    <input type="text" name="nombre" id="nombre" class="form-control" required autofocus>
+                    <input type="text" value="{{ p.nombre }}" name="nombre" id="nombre" class="form-control" required autofocus>
                 </div>
                 <div class="mb-3">
                     <label for="apellido">Apellido</label>
-                    <input type="text" name="apellido" id="apellido" class="form-control" required>
+                    <input type="text" value="{{ p.apellido }}" name="apellido" id="apellido" class="form-control" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="correo">Correo</label>
-                    <input type="email" name="correo" id="correo" class="form-control" required>
+                    <input type="email" value="{{ p.correo }}" name="correo" id="correo" class="form-control" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="twitter">Twitter</label>
-                    <input type="text" name="twitter" id="twitter" class="form-control" required>
+                    <input type="text" value="{{ p.twitter|default_if_none:'' }}" name="twitter" id="twitter" class="form-control" required>
                 </div>
 
                 <div class="mb-3">
-                    <input type="submit" class="btn btn-success btn-block" value="Registrar">
+                    {% if p  %}
+                    <input type="submit" class="btn btn-block text-white" style="background-color: #ff8a50" value="Actualizar Participante">
+                    {% else %}
+                    <input type="submit" class="btn btn-block text-white" style="background-color: #ff8a50" value="Registrar Participante">
+                    {% endif %}
                 </div>
             </form>
         </div>
@@ -40,7 +48,7 @@
             {% if messages %}
                 <div class="alert alert-success mb-2">
                     {% for message in messages %}
-                        {{ message }}
+                        {{ message|safe }}  {% comment %}con safe se renderiza correctamente el html {% endcomment %} 
                     {% endfor %}
                 </div>
             {% endif %}
@@ -57,7 +65,8 @@
                         <th>Nombre</th>
                         <th>Apellido</th>
                         <th>Correo</th>
-                        <th>Twiter</th>
+                        <th>Twitter</th>
+                        <th class="text-center">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -67,10 +76,14 @@
                         <td>{{ p.apellido }}</td>
                         <td>{{ p.correo }}</td>
                         <td>{{ p.twitter|default_if_none:'-' }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'editar_participante' p.id %}" class="text-success"><span class="fas fa-edit"></a>
+                            <a onclick="if (!confirm('Confirme la eliminacion')) return false;" href="{% url 'eliminar_participante' p.id %}" class="text-danger"><span class="fas fa-trash-alt"></span></a>
+                        </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="4" class="text-danger text-center">No se encontraron resultados</td>
+                        <td colspan="5" class="text-danger text-center">No se encontraron resultados</td>
                     <tr>
                     {% endfor %}
                 </tbody>
