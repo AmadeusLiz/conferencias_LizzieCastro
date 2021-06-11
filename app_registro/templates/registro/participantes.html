@@ -10,7 +10,7 @@
         <!-- FORMULARIO -->
         <div class="col-3">
         {% if p  %}
-            <form action="{% url 'editar_participante' p.id %}"></form>
+            <form action="{% url 'editar_participante' p.id %}" method="POST">
         {% else  %}
             <form action="{% url 'participantes' %}" method="POST">
         {% endif  %}
@@ -31,7 +31,7 @@
 
                 <div class="mb-3">
                     <label for="twitter">Twitter</label>
-                    <input type="text" value="{{ p.twitter|default_if_none:'' }}" name="twitter" id="twitter" class="form-control" required>
+                    <input type="text" value="{{ p.twitter|default_if_none:'-' }}" name="twitter" id="twitter" class="form-control" required>
                 </div>
 
                 <div class="mb-3">
